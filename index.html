@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Science4all für FOSBOS</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f5f5f5;
+    padding:15px;
+}
+
+header{
+    background:#d4df27;
+    color:#000;
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:20px;
+    text-align:center;
+}
+
+h1{
+    font-size:24px;
+    margin-bottom:8px;
+}
+
+.subtitle{
+    font-size:15px;
+}
+
+select{
+    width:100%;
+    padding:12px;
+    font-size:16px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    margin:15px 0;
+}
+
+.plan{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.card{
+    background:#fff;
+    border-radius:12px;
+    padding:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+
+.time{
+    color:#7d8600;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.title{
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+.room{
+    color:#555;
+    font-size:14px;
+}
+
+.highlight{
+    background:#eef2b4;
+}
+
+.network{
+    background:#e8f5e9;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Science4all für FOSBOS</h1>
+    <div class="subtitle">
+        13:45 - 14:00 Uhr<br>
+        Willkommen durch Team Gleichstellungsbeauftragte<br>
+        Hörsaal H.1.1
+    </div>
+</header>
+
+<label>Gruppe auswählen:</label>
+
+<select id="gruppe" onchange="zeigePlan()">
+    <option value="">Bitte auswählen</option>
+    <option value="gestaltung">1: Gestaltung / Sozial</option>
+    <option value="wirtschaft">2: Wirtschaft / Gesundheit</option>
+</select>
+
+<div id="plan" class="plan"></div>
+
+<script>
+
+const plaene = {
+
+gestaltung: [
+
+{
+zeit:"14:00 - 14:30 Uhr",
+titel:"💡 Study-Info & Marktplatz",
+raum:"I.3 Flur & I.3.20 / I.3.24"
+},
+
+{
+zeit:"14:30 - 15:00 Uhr",
+titel:"🏫 Campus-Führung 🎓",
+raum:"Treffen vor H.1.1 am Eingang"
+},
+
+{
+zeit:"15:15 - 16:15 Uhr",
+titel:"Martin Speer: Male Allyship? It's all about us!",
+raum:"H.1.1"
+},
+
+{
+zeit:"16:15 - 17:00 Uhr",
+titel:"Grußwort & Award-Verleihung",
+raum:"Kanzler THWS Stefan Hartmann, Oberbürgermeister Martin Heilig, ICS-Science Equality Award (SEA) · H.1.1",
+highlight:true
+},
+
+{
+zeit:"ab 17:00 Uhr",
+titel:"Smoothie Bar / Messe & Ausstellung / Verlosung",
+raum:"Campus Innenhof",
+highlight:true
+},
+
+{
+zeit:"18:00 - 21:00 Uhr",
+titel:"Networking im Innenhof des Campus",
+raum:"mit chilligen Beats und DJane",
+network:true
+}
+
+],
+
+wirtschaft: [
+
+{
+zeit:"14:00 - 14:30 Uhr",
+titel:"🏫 Campus-Führung 🎓",
+raum:"Treffen vor H.1.1 am Eingang"
+},
+
+{
+zeit:"14:30 - 15:00 Uhr",
+titel:"💡 Study-Info & Marktplatz",
+raum:"I.3 Flur & I.3.20 / I.3.24"
+},
+
+{
+zeit:"15:15 - 16:15 Uhr",
+titel:"Martin Speer: Male Allyship? It's all about us!",
+raum:"H.1.1"
+},
+
+{
+zeit:"16:15 - 17:00 Uhr",
+titel:"Grußwort & Award-Verleihung",
+raum:"Kanzler THWS Stefan Hartmann, Oberbürgermeister Martin Heilig, ICS-Science Equality Award (SEA) · H.1.1",
+highlight:true
+},
+
+{
+zeit:"ab 17:00 Uhr",
+titel:"Smoothie Bar / Messe & Ausstellung / Verlosung",
+raum:"Campus Innenhof",
+highlight:true
+},
+
+{
+zeit:"18:00 - 21:00 Uhr",
+titel:"Networking im Innenhof des Campus",
+raum:"mit chilligen Beats und DJane",
+network:true
+}
+
+]
+
+};
+
+function zeigePlan(){
+
+const gruppe=document.getElementById("gruppe").value;
+const plan=document.getElementById("plan");
+
+if(!gruppe){
+    plan.innerHTML="";
+    return;
+}
+
+plan.innerHTML = plaene[gruppe].map(item => `
+<div class="card
+${item.highlight ? "highlight" : ""}
+${item.network ? "network" : ""}">
+    
+    <div class="time">${item.zeit}</div>
+    
+    <div class="title">${item.titel}</div>
+    
+    <div class="room">${item.raum}</div>
+
+</div>
+`).join("");
+
+}
+
+</script>
+
+</body>
+</html>
