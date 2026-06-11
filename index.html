@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -36,13 +37,20 @@ h1{
     font-size:15px;
 }
 
+label{
+    display:block;
+    margin-top:10px;
+    margin-bottom:5px;
+    font-weight:bold;
+}
+
 select{
     width:100%;
     padding:12px;
     font-size:16px;
     border-radius:10px;
     border:1px solid #ccc;
-    margin:15px 0;
+    margin-bottom:15px;
 }
 
 .plan{
@@ -81,6 +89,15 @@ select{
 .network{
     background:#e8f5e9;
 }
+
+.gruppeninfo{
+    background:#fff8c4;
+    border-radius:10px;
+    padding:10px;
+    margin-bottom:15px;
+    text-align:center;
+    font-weight:bold;
+}
 </style>
 </head>
 
@@ -95,13 +112,22 @@ select{
     </div>
 </header>
 
-<label>Gruppe auswählen:</label>
+<label>Bereich auswählen:</label>
 
-<select id="gruppe" onchange="zeigePlan()">
+<select id="bereich" onchange="ladeGruppen()">
     <option value="">Bitte auswählen</option>
-    <option value="gestaltung">1: Gestaltung / Sozial</option>
-    <option value="wirtschaft">2: Wirtschaft / Gesundheit</option>
+    <option value="wirtschaft">Wirtschaft / Gesundheit</option>
+    <option value="gestaltung">Gestaltung / Sozial</option>
 </select>
+
+<label id="gruppenLabel" style="display:none;">
+    Gruppe auswählen:
+</label>
+
+<select id="gruppe" onchange="zeigePlan()" style="display:none;">
+</select>
+
+<div id="gruppenInfo"></div>
 
 <div id="plan" class="plan"></div>
 
@@ -197,30 +223,78 @@ network:true
 
 };
 
-function zeigePlan(){
+function ladeGruppen(){
 
-const gruppe=document.getElementById("gruppe").value;
-const plan=document.getElementById("plan");
+    const bereich = document.getElementById("bereich").value;
+    const gruppeSelect = document.getElementById("gruppe");
+    const gruppenLabel = document.getElementById("gruppenLabel");
 
-if(!gruppe){
-    plan.innerHTML="";
-    return;
+    document.getElementById("plan").innerHTML = "";
+    document.getElementById("gruppenInfo").innerHTML = "";
+
+    gruppeSelect.innerHTML = "";
+
+    if(!bereich){
+        gruppeSelect.style.display = "none";
+        gruppenLabel.style.display = "none";
+        return;
+    }
+
+    gruppeSelect.style.display = "block";
+    gruppenLabel.style.display = "block";
+
+    let optionen = '<option value="">Bitte auswählen</option>';
+
+    if(bereich === "wirtschaft"){
+
+        for(let i=1;i<=6;i++){
+            optionen += `<option value="wirtschaft" data-gruppe="${i}">Gruppe ${i}</option>`;
+        }
+
+    }else{
+
+        for(let i=7;i<=12;i++){
+            optionen += `<option value="gestaltung" data-gruppe="${i}">Gruppe ${i}</option>`;
+        }
+
+    }
+
+    gruppeSelect.innerHTML = optionen;
 }
 
-plan.innerHTML = plaene[gruppe].map(item => `
-<div class="card
-${item.highlight ? "highlight" : ""}
-${item.network ? "network" : ""}">
-    
-    <div class="time">${item.zeit}</div>
-    
-    <div class="title">${item.titel}</div>
-    
-    <div class="room">${item.raum}</div>
+function zeigePlan(){
 
-</div>
-`).join("");
+    const gruppeSelect = document.getElementById("gruppe");
 
+    if(!gruppeSelect.value){
+        document.getElementById("plan").innerHTML = "";
+        document.getElementById("gruppenInfo").innerHTML = "";
+        return;
+    }
+
+    const gruppeNummer =
+        gruppeSelect.options[gruppeSelect.selectedIndex]
+        .dataset.gruppe;
+
+    document.getElementById("gruppenInfo").innerHTML =
+        `<div class="gruppeninfo">Ausgewählte Gruppe: ${gruppeNummer}</div>`;
+
+    const plan = plaene[gruppeSelect.value];
+
+    document.getElementById("plan").innerHTML =
+        plan.map(item => `
+            <div class="card
+                ${item.highlight ? "highlight" : ""}
+                ${item.network ? "network" : ""}">
+
+                <div class="time">${item.zeit}</div>
+
+                <div class="title">${item.titel}</div>
+
+                <div class="room">${item.raum}</div>
+
+            </div>
+        `).join("");
 }
 
 </script>
